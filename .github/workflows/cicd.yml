@@ -50,12 +50,14 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Pull & restart server
+      - name: Pull & build on server
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@ec2-52-44-241-242.compute-1.amazonaws.com << 'EOF'
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm use node
             cd cda24-2-testcicd
             git pull
             npm run build
-            pm2 start node -- run start
+            pm2 restart next-app || pm2 start npm --name "next-app" -- run start
           EOF
