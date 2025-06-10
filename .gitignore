@@ -42,3 +42,6 @@ next-env.d.ts
 # cypress
 /cypress/screenshots
 /cypress/videos
+
+#history
+.history
