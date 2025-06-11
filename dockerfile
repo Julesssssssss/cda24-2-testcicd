@@ -8,7 +8,7 @@ RUN npm ci
 
 COPY . .
 
-# Étape de développement
+# Étape de développementt
 FROM node:20-alpine
 
 WORKDIR /app
