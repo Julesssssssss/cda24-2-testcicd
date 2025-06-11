@@ -1,14 +1,14 @@
-# # Étape de build
-# FROM node:24.2-alpine3.21 AS builder
+# Étape de build
+FROM node:24.2-alpine3.21 AS builder
 
-# WORKDIR /app
+WORKDIR /app
 
-# COPY package.json package-lock.json ./
-# RUN npm ci
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# COPY . .
+COPY . .
 
-# Étape de développement
+#Étape de développement
 FROM node:24.2-alpine3.21 as next
 
 
