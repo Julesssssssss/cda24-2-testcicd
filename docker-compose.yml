@@ -10,6 +10,6 @@ services:
     command: ["npm", "run", "dev"]
     volumes:
       - .:/app
-      - /app/node_modules # Ne pas utiliser les node_modules de la machine hôte
+      - /app/node_modules
     environment:
       - NODE_ENV=development
