@@ -1,4 +1,4 @@
-# Étape de build
+# Étape 1 : Builder
 FROM node:24.2-alpine3.21 AS builder
 
 WORKDIR /app
@@ -8,25 +8,24 @@ RUN npm ci
 
 COPY . .
 
-#Étape de développement
-FROM node:24.2-alpine3.21 as next
-
-
-ADD . /app/
-WORKDIR /app
-
-RUN npm install --omit:dev
+# Build Next.js (génère .next)
 RUN npm run build
 
-COPY --from=builder /app/package.json /app/package.json
-COPY --from=builder /app/.next /app/.next
-COPY --from=builder /app/node_modules /app/node_modules
+# Étape 2 : Image finale "next"
+FROM node:24.2-alpine3.21 AS next
 
+WORKDIR /app
 
+# Copie les fichiers nécessaires
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
 
-# Installe les dépendances si elles ne sont pas déjà présentes (via entrypoint)
+# Copie ton script d’entrée
 COPY docker/next/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
 EXPOSE 3000
 
 ENTRYPOINT ["entrypoint.sh"]
